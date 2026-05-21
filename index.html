@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>云蝠控股 · 组织架构图</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;color:#1a1a18;min-height:100vh}
@@ -18,8 +19,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .btn.primary{background:#534AB7;color:#fff;border-color:#534AB7}
 .btn.primary:hover{background:#3C3489}
 .btn.sm{padding:3px 9px;font-size:12px}
-.btn.danger{border-color:#e24b4a;color:#a32d2d}
-.btn.danger:hover{background:#fcebeb}
+.btn.danger{background:#a32d2d;color:#fff;border-color:#a32d2d}
+.btn.danger:hover{background:#791F1F}
 .legend{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .leg-item{display:flex;align-items:center;gap:5px;font-size:12px;color:#888780}
 .leg-dot{width:10px;height:10px;border-radius:3px}
@@ -44,8 +45,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .level-badge{font-size:12px;font-weight:600;padding:3px 10px;border-radius:6px;min-width:38px;text-align:center}
 .level-name{font-size:13px;color:#888780}
 .level-count{font-size:12px;color:#b4b2a9;margin-left:auto}
-.add-person-btn{font-size:12px;color:#534AB7;cursor:pointer;padding:2px 8px;border-radius:6px;border:0.5px dashed #534AB7;background:transparent}
-.add-person-btn:hover{background:#EEEDFE}
 .people-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
 .person-card{display:flex;align-items:flex-start;gap:9px;padding:9px 11px;border-radius:8px;border:0.5px solid #e0dfd8;background:#fff;position:relative}
 .person-card:hover{border-color:#d3d1c7}
@@ -59,33 +58,79 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .icon-btn{width:22px;height:22px;border-radius:5px;border:0.5px solid #d3d1c7;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:#888780}
 .icon-btn:hover{background:#f5f5f0}
 .icon-btn.del:hover{background:#fcebeb;color:#a32d2d;border-color:#e24b4a}
+.icon-btn.transfer:hover{background:#E6F1FB;color:#0C447C;border-color:#378ADD}
+.icon-btn.level:hover{background:#FAEEDA;color:#854F0B;border-color:#EF9F27}
+.icon-btn.leave:hover{background:#fcebeb;color:#a32d2d;border-color:#e24b4a}
 .overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px}
-.modal{background:#fff;border-radius:14px;border:0.5px solid #e0dfd8;padding:22px;width:100%;max-width:420px}
+.modal{background:#fff;border-radius:14px;border:0.5px solid #e0dfd8;padding:22px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto}
 .modal h3{font-size:15px;font-weight:600;margin-bottom:16px}
+.modal .info-line{font-size:12px;color:#888780;background:#fafaf8;padding:8px 11px;border-radius:8px;margin-bottom:14px;border:0.5px solid #e0dfd8}
 .field{margin-bottom:12px}
 .field label{font-size:12px;color:#888780;display:block;margin-bottom:4px;font-weight:500}
-.field input,.field select{width:100%;padding:7px 11px;font-size:13px;border:0.5px solid #d3d1c7;border-radius:8px;background:#fafaf8;color:#1a1a18;outline:none}
-.field input:focus,.field select:focus{border-color:#534AB7;background:#fff}
+.field input,.field select,.field textarea{width:100%;padding:7px 11px;font-size:13px;border:0.5px solid #d3d1c7;border-radius:8px;background:#fafaf8;color:#1a1a18;outline:none;font-family:inherit}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#534AB7;background:#fff}
+.field textarea{resize:vertical;min-height:50px}
 .modal-btns{display:flex;gap:8px;margin-top:16px}
-.saved-tip{font-size:12px;color:#0F6E56;background:#E1F5EE;padding:3px 10px;border-radius:6px;opacity:0;transition:opacity .3s}
+.saved-tip{font-size:12px;padding:3px 10px;border-radius:6px;opacity:0;transition:opacity .3s}
 .saved-tip.show{opacity:1}
+.saved-tip.success{color:#0F6E56;background:#E1F5EE}
+.saved-tip.error{color:#a32d2d;background:#fcebeb}
+.saved-tip.loading{color:#854F0B;background:#FAEEDA}
 .close-btn{width:28px;height:28px;border-radius:7px;border:0.5px solid #d3d1c7;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:#888780}
 .close-btn:hover{background:#f5f5f0}
+.archive-wrap{background:#fff;border-radius:12px;border:0.5px solid #e0dfd8;margin-bottom:14px;overflow:hidden}
+.archive-hdr{padding:12px 20px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
+.archive-hdr:hover{background:#fafaf8}
+.archive-title{font-size:14px;font-weight:600;color:#5F5E5A}
+.archive-toggle{font-size:12px;color:#888780}
+.archive-body{padding:0 20px 16px;display:none}
+.archive-body.show{display:block}
+.archive-item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#fafaf8;border:0.5px solid #e0dfd8;border-radius:8px;margin-bottom:6px;font-size:12px;color:#5F5E5A;flex-wrap:wrap;gap:8px}
+.archive-info{flex:1;min-width:200px}
+.archive-info strong{color:#1a1a18;font-weight:600}
+.archive-meta{color:#888780;margin-top:3px;line-height:1.5}
+.hr-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:3px 9px;border-radius:6px;background:#E1F5EE;color:#0F6E56;font-weight:500}
+.hr-badge.locked{background:#f1efe8;color:#888780}
+.loading-screen{position:fixed;inset:0;background:#f5f5f0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:14px}
+.loading-screen.hide{display:none}
+.spinner{width:32px;height:32px;border:3px solid #e0dfd8;border-top-color:#534AB7;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:13px;color:#888780}
+.error-screen{position:fixed;inset:0;background:#f5f5f0;display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}
+.error-screen.show{display:flex}
+.error-box{background:#fff;border:1px solid #e24b4a;border-radius:12px;padding:24px;max-width:480px;text-align:center}
+.error-box h3{color:#a32d2d;margin-bottom:10px}
+.error-box p{font-size:13px;color:#5F5E5A;line-height:1.6}
 @media(max-width:600px){.people-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<div class="page">
+<div class="loading-screen" id="loading-screen">
+  <div class="spinner"></div>
+  <div class="loading-text">正在从云端加载组织架构数据...</div>
+</div>
+
+<div class="error-screen" id="error-screen">
+  <div class="error-box">
+    <h3>⚠️ 加载失败</h3>
+    <p id="error-msg">无法连接到云端数据库，请检查网络连接。</p>
+    <p style="margin-top:10px;font-size:12px;color:#888780">如果反复出现此错误，请联系管理员检查 Supabase 配置。</p>
+    <button class="btn primary" style="margin-top:14px" onclick="location.reload()">重新加载</button>
+  </div>
+</div>
+
+<div class="page" id="main-page" style="display:none">
 <div class="hdr">
   <div class="hdr-left">
     <div class="logo">云</div>
     <div>
       <div class="hdr-title">云蝠控股 · 组织架构图</div>
-      <div class="hdr-sub">点击部门节点 · 查看职级分布 · 在线编辑人员</div>
+      <div class="hdr-sub" id="hdr-sub">点击部门节点 · 查看职级分布</div>
     </div>
   </div>
-  <div style="display:flex;gap:8px;align-items:center">
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
     <span class="saved-tip" id="saved-tip">已保存</span>
+    <span class="hr-badge locked" id="hr-badge" onclick="openLoginModal()" style="cursor:pointer">🔒 HR 登录</span>
     <div class="legend">
       <div class="leg-item"><div class="leg-dot" style="background:#534AB7"></div>核心/总部</div>
       <div class="leg-item"><div class="leg-dot" style="background:#0F6E56"></div>职能</div>
@@ -106,13 +151,66 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       <div id="d-chips"></div>
-      <button class="btn sm primary" onclick="openAddPerson()">+ 添加人员</button>
+      <button class="btn sm primary hr-only" onclick="openAddPerson()" style="display:none">+ 添加人员</button>
       <div class="close-btn" onclick="closeDetail()">✕</div>
     </div>
   </div>
   <div class="kpi-row" id="d-kpis"></div>
   <div class="people-section" id="d-people"></div>
 </div>
+
+<div class="archive-wrap">
+  <div class="archive-hdr" onclick="toggleArchive()">
+    <div class="archive-title">📁 已离职归档 (<span id="archive-count">0</span>)</div>
+    <div class="archive-toggle" id="archive-toggle">展开 ▼</div>
+  </div>
+  <div class="archive-body" id="archive-body"></div>
+</div>
+
+</div>
+
+<div class="overlay" id="modal-login" style="display:none">
+  <div class="modal">
+    <h3>🔐 HR 口令登录</h3>
+    <div class="info-line">普通查看不需要登录。输入 HR 口令后才能进行入转调离等编辑操作。</div>
+    <div class="field">
+      <label>HR 口令</label>
+      <input type="password" id="login-password" placeholder="请输入口令" autofocus/>
+    </div>
+    <div id="login-error" style="color:#a32d2d;font-size:12px;margin-bottom:10px;display:none"></div>
+    <div class="modal-btns">
+      <button class="btn primary" onclick="doLogin()">登录</button>
+      <button class="btn" onclick="closeModal('modal-login')">取消</button>
+    </div>
+    <div style="margin-top:14px;font-size:11px;color:#888780;border-top:0.5px solid #e0dfd8;padding-top:10px">
+      <strong>已登录 HR？</strong> 可以
+      <a href="#" onclick="openChangePassword();return false;" style="color:#534AB7">修改口令</a>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="modal-changepw" style="display:none">
+  <div class="modal">
+    <h3>🔑 修改 HR 口令</h3>
+    <div class="info-line">建议每月更换一次口令，提升数据安全性。</div>
+    <div class="field">
+      <label>当前口令</label>
+      <input type="password" id="cpw-old" placeholder="当前 HR 口令"/>
+    </div>
+    <div class="field">
+      <label>新口令</label>
+      <input type="password" id="cpw-new" placeholder="新口令（建议 6 位以上）"/>
+    </div>
+    <div class="field">
+      <label>再次输入新口令</label>
+      <input type="password" id="cpw-confirm" placeholder="再次确认"/>
+    </div>
+    <div id="cpw-error" style="color:#a32d2d;font-size:12px;margin-bottom:10px;display:none"></div>
+    <div class="modal-btns">
+      <button class="btn primary" onclick="doChangePassword()">确认修改</button>
+      <button class="btn" onclick="closeModal('modal-changepw')">取消</button>
+    </div>
+  </div>
 </div>
 
 <div class="overlay" id="modal" style="display:none">
@@ -136,12 +234,95 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="field"><label>所属二级部门</label><input id="f-sub" placeholder="如：财务部（可留空）"/></div>
     <div class="modal-btns">
       <button class="btn primary" onclick="confirmPerson()">确认</button>
-      <button class="btn" onclick="closeModal()">取消</button>
+      <button class="btn" onclick="closeModal('modal')">取消</button>
     </div>
   </div>
 </div>
 
+<div class="overlay" id="modal-transfer" style="display:none">
+  <div class="modal">
+    <h3>📋 调岗</h3>
+    <div class="info-line" id="t-info"></div>
+    <div class="field"><label>调入部门</label>
+      <select id="t-dept"></select>
+    </div>
+    <div class="field"><label>新二级部门（可选）</label>
+      <input id="t-sub" placeholder="留空则使用原二级部门"/>
+    </div>
+    <div class="field"><label>新职务（可选）</label>
+      <input id="t-role" placeholder="留空则保持原职务"/>
+    </div>
+    <div class="field"><label>调岗备注</label>
+      <textarea id="t-note" placeholder="例如：业务调整、内部轮岗"></textarea>
+    </div>
+    <div class="modal-btns">
+      <button class="btn primary" onclick="confirmTransfer()">确认调岗</button>
+      <button class="btn" onclick="closeModal('modal-transfer')">取消</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="modal-level" style="display:none">
+  <div class="modal">
+    <h3>🎖 改职级</h3>
+    <div class="info-line" id="l-info"></div>
+    <div class="field"><label>新职级</label>
+      <select id="l-level">
+        <option value="M1">M1 — 董事长/总经理</option>
+        <option value="M2">M2 — 副总</option>
+        <option value="M3">M3 — 总监</option>
+        <option value="M4">M4 — 部门经理/总监</option>
+        <option value="M5">M5 — 部门经理</option>
+        <option value="M6">M6 — 部门主管</option>
+        <option value="M7">M7 — 高级专员</option>
+        <option value="M8">M8 — 专员</option>
+        <option value="-">无职级（一线员工）</option>
+      </select>
+    </div>
+    <div class="field"><label>变更原因</label>
+      <textarea id="l-note" placeholder="例如：年度晋升、降级处理"></textarea>
+    </div>
+    <div class="modal-btns">
+      <button class="btn primary" onclick="confirmLevel()">确认变更</button>
+      <button class="btn" onclick="closeModal('modal-level')">取消</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="modal-leave" style="display:none">
+  <div class="modal">
+    <h3>🚪 办理离职</h3>
+    <div class="info-line" id="q-info"></div>
+    <div class="field"><label>离职日期</label>
+      <input type="date" id="q-date"/>
+    </div>
+    <div class="field"><label>离职原因</label>
+      <select id="q-reason">
+        <option value="主动离职">主动离职</option>
+        <option value="合同到期">合同到期</option>
+        <option value="协商解除">协商解除</option>
+        <option value="辞退">辞退</option>
+        <option value="退休">退休</option>
+        <option value="其他">其他</option>
+      </select>
+    </div>
+    <div class="field"><label>备注</label>
+      <textarea id="q-note" placeholder="例如：交接人、未结事项"></textarea>
+    </div>
+    <div class="modal-btns">
+      <button class="btn danger" onclick="confirmLeave()">确认离职</button>
+      <button class="btn" onclick="closeModal('modal-leave')">取消</button>
+    </div>
+  </div>
+</div>
 <script>
+// =========================================================
+// ⚠️ 配置区：填你自己的 Supabase 信息
+// =========================================================
+const SUPABASE_URL = 'https://jybhgnirqpwbdezixirx.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_GYQtIU2KB7BeOZfqtQtDYA_UbjS-zJC';
+// =========================================================
+
 const LEVEL_META={
   M1:{label:'M1',bg:'#26215C',tc:'#EEEDFE',name:'董事长/总经理'},
   M2:{label:'M2',bg:'#3C3489',tc:'#EEEDFE',name:'副总'},
@@ -155,176 +336,176 @@ const LEVEL_META={
 };
 const LEVEL_ORDER=['M1','M2','M3','M4','M5','M6','M7','M8','-'];
 
-const DEFAULT_DATA=[
-  {id:'gmo',name:'总经办',en:'General Manager Office',count:11,type:'总部',bg:'#EEEDFE',tc:'#3C3489',bar:'#534AB7',note:'含董事长、总经理办公室',
-   people:[
-    {id:'p1',name:'郭健',role:'董事长',level:'M1',sub:'领导层'},
-    {id:'p2',name:'周婉',role:'总经理',level:'M1',sub:'领导层'},
-    {id:'p3',name:'Bo Guo',role:'董事长',level:'M1',sub:'领导层'},
-    {id:'p4',name:'王峰',role:'董事长助理',level:'M4',sub:'领导层'},
-    {id:'p5',name:'吴竹君',role:'董事长助理',level:'M4',sub:'领导层'},
-    {id:'p6',name:'张一佳',role:'总经理助理',level:'M5',sub:'领导层'},
-    {id:'p7',name:'杨子煌',role:'AI管培生',level:'M7',sub:'战略运营组'},
-    {id:'p8',name:'赵雨琪',role:'AI管培生',level:'M7',sub:'战略运营组'},
-    {id:'p9',name:'裴书辉',role:'AI管培生',level:'M7',sub:'战略运营组'},
-    {id:'p10',name:'贾美林',role:'运营助理',level:'M7',sub:'战略运营组'},
-    {id:'p11',name:'唐怡珺',role:'运营助理',level:'M7',sub:'战略运营组'},
-  ]},
-  {id:'fin',name:'财务中心',en:'Finance Center',count:21,type:'职能',bg:'#E1F5EE',tc:'#085041',bar:'#0F6E56',note:'含财务部+资金部',
-   people:[
-    {id:'p20',name:'沈亚芳',role:'财务总监',level:'M3',sub:'财务部'},
-    {id:'p21',name:'王凤珠',role:'总账经理',level:'M5',sub:'财务部'},
-    {id:'p22',name:'郭晨',role:'资金经理',level:'M5',sub:'资金部'},
-    {id:'p23',name:'张莉莉',role:'应付主管',level:'M6',sub:'财务部'},
-    {id:'p24',name:'朱冰洁',role:'应收主管',level:'M6',sub:'财务部'},
-    {id:'p25',name:'刘娜英',role:'总账主管',level:'M6',sub:'财务部'},
-    {id:'p26',name:'吴桐蕊',role:'数据主管',level:'M6',sub:'财务部'},
-    {id:'p27',name:'黄春香',role:'总账主管',level:'M6',sub:'财务部'},
-    {id:'p28',name:'樊雍',role:'总账',level:'M7',sub:'财务部'},
-    {id:'p29',name:'葛盼盼',role:'总账',level:'M7',sub:'财务部'},
-    {id:'p30',name:'秦琼',role:'数据员',level:'M7',sub:'财务部'},
-    {id:'p31',name:'郭英智',role:'财务专员',level:'M7',sub:'资金部'},
-    {id:'p32',name:'鲍咏梅',role:'应付',level:'M8',sub:'财务部'},
-    {id:'p33',name:'赵丽',role:'应付',level:'M8',sub:'财务部'},
-    {id:'p34',name:'王琪',role:'应付',level:'M8',sub:'财务部'},
-    {id:'p35',name:'单敏',role:'应收',level:'M8',sub:'财务部'},
-    {id:'p36',name:'蒋莹',role:'出纳',level:'M8',sub:'财务部'},
-    {id:'p37',name:'张瑞燕',role:'应付',level:'M8',sub:'财务部'},
-    {id:'p38',name:'郭佳宁',role:'应收',level:'M8',sub:'财务部'},
-    {id:'p39',name:'林彦博',role:'总账',level:'M7',sub:'财务部'},
-    {id:'p40',name:'郭莉',role:'财务助理',level:'M8',sub:'资金部'},
-  ]},
-  {id:'prod',name:'产品中心',en:'Product Center',count:288,type:'核心业务',bg:'#EEEDFE',tc:'#3C3489',bar:'#534AB7',note:'含技术部+设计部',
-   people:[
-    {id:'p50',name:'褚娜娜',role:'TD总监',level:'M4',sub:'技术部'},
-    {id:'p51',name:'邓洪',role:'生产厂长',level:'M5',sub:'快返车间'},
-    {id:'p52',name:'肖华',role:'车间主管',level:'M6',sub:'快返车间'},
-    {id:'p53',name:'周利君',role:'设备管理',level:'M6',sub:'快返车间'},
-    {id:'p54',name:'冯瑞勤',role:'TD',level:'M7',sub:'技术部'},
-    {id:'p55',name:'池国悦',role:'TD助理',level:'M7',sub:'技术部'},
-    {id:'p56',name:'朱丽丽',role:'管培生',level:'M7',sub:'技术部'},
-    {id:'p57',name:'陈自愿',role:'裁剪主管',level:'M7',sub:'快返车间'},
-    {id:'p58',name:'闵建',role:'车间计划员',level:'M7',sub:'快返车间'},
-    {id:'p59',name:'（设计师团队约200+）',role:'设计师',level:'-',sub:'设计部'},
-  ]},
-  {id:'biz',name:'业务中心',en:'Business Center',count:98,type:'核心业务',bg:'#EEEDFE',tc:'#3C3489',bar:'#534AB7',note:'业务一至五部+零售',
-   people:[
-    {id:'p70',name:'郭燕',role:'业务经理',level:'M4',sub:'零售业务部'},
-    {id:'p71',name:'周臻',role:'资深业务经理',level:'M4',sub:'业务二部'},
-    {id:'p72',name:'张晓娜',role:'资深业务员',level:'M5',sub:'业务二部'},
-    {id:'p73',name:'钱佳佳',role:'高级业务员',level:'M6',sub:'零售业务部'},
-    {id:'p74',name:'操舒一',role:'中级业务员',level:'M6',sub:'零售业务部'},
-    {id:'p75',name:'唐旦慧',role:'中级业务员',level:'M6',sub:'业务二部'},
-    {id:'p76',name:'陈梦燕',role:'业务助理',level:'M7',sub:'零售业务部'},
-    {id:'p77',name:'杨洋',role:'业务助理',level:'M7',sub:'零售业务部'},
-    {id:'p78',name:'翁兆倩',role:'初级业务员',level:'M7',sub:'零售业务部'},
-    {id:'p79',name:'王舒婷',role:'业务助理',level:'M8',sub:'业务二部'},
-    {id:'p80',name:'（其余约80+人）',role:'各业务部门',level:'-',sub:'业务三~五部'},
-  ]},
-  {id:'ops',name:'运营中心',en:'Operations Center',count:136,type:'核心业务',bg:'#EEEDFE',tc:'#3C3489',bar:'#534AB7',note:'仓储+物流+CSR',
-   people:[
-    {id:'p90',name:'王小红',role:'CSR经理',level:'M4',sub:'销售CSR'},
-    {id:'p91',name:'周军',role:'仓储经理',level:'M5',sub:'仓储部'},
-    {id:'p92',name:'张娟',role:'物流CSR经理',level:'M5',sub:'物流CSR'},
-    {id:'p93',name:'严丹',role:'采购CSR经理',level:'M5',sub:'采购CSR'},
-    {id:'p94',name:'桑宇红',role:'资深仓储主管',level:'M6',sub:'仓储部'},
-    {id:'p95',name:'谢煜',role:'物流CSR主管',level:'M6',sub:'物流CSR'},
-    {id:'p96',name:'朱铭洁',role:'物流CSR专员',level:'M6',sub:'物流CSR'},
-    {id:'p97',name:'陈东东',role:'仓储主管',level:'M7',sub:'仓储部'},
-    {id:'p98',name:'钟樵渔',role:'仓储主管',level:'M7',sub:'仓储部'},
-    {id:'p99',name:'郭景艳',role:'仓储计划员',level:'M7',sub:'仓储部'},
-    {id:'p100',name:'吴昊',role:'物流CSR专员',level:'M7',sub:'物流CSR'},
-    {id:'p101',name:'周志霞',role:'采购CSR专员',level:'M7',sub:'采购CSR'},
-  ]},
-  {id:'brand',name:'品牌运营',en:'Brand Operations',count:10,type:'职能',bg:'#E1F5EE',tc:'#085041',bar:'#0F6E56',note:'市场+电商',
-   people:[
-    {id:'p110',name:'黄雯',role:'市场总监',level:'M2',sub:'市场部'},
-    {id:'p111',name:'林佳棱',role:'市场经理',level:'M5',sub:'市场部'},
-    {id:'p112',name:'程敏昊',role:'会员运营',level:'M6',sub:'市场部'},
-    {id:'p113',name:'张心宇',role:'视觉创意主管',level:'M6',sub:'市场部'},
-    {id:'p114',name:'司晓君',role:'运营主管',level:'M6',sub:'电商运营'},
-    {id:'p115',name:'邵云豪',role:'摄影师',level:'M7',sub:'市场部'},
-    {id:'p116',name:'石净',role:'修图师',level:'M8',sub:'市场部'},
-    {id:'p117',name:'陈楚楚',role:'运营专员',level:'M7',sub:'电商运营'},
-    {id:'p118',name:'汪晓伟',role:'辅料采购员',level:'M7',sub:'电商运营'},
-  ]},
-  {id:'scm',name:'供应链',en:'Supply Chain Mgmt',count:96,type:'核心业务',bg:'#EEEDFE',tc:'#3C3489',bar:'#534AB7',note:'含品质+采购',
-   people:[
-    {id:'p120',name:'王健',role:'采购经理',level:'M4',sub:'采购部'},
-    {id:'p121',name:'肖昇',role:'采购经理',level:'M4',sub:'采购部'},
-    {id:'p122',name:'陈柯宇',role:'采购经理',level:'M4',sub:'采购部'},
-    {id:'p123',name:'牛贵荣',role:'采购经理',level:'M4',sub:'采购部'},
-    {id:'p124',name:'陆芳华',role:'品质经理',level:'M5',sub:'品质部'},
-    {id:'p125',name:'吴晓桦',role:'资深采购员',level:'M5',sub:'采购部'},
-    {id:'p126',name:'王真媛',role:'品质经理',level:'M5',sub:'品质部'},
-    {id:'p127',name:'桑宇超',role:'高级采购员',level:'M5',sub:'采购部'},
-    {id:'p128',name:'张红燕',role:'QA',level:'M6',sub:'品质部'},
-    {id:'p129',name:'鲍亚萍',role:'QA',level:'M6',sub:'品质部'},
-    {id:'p130',name:'郭利强',role:'QC',level:'M7',sub:'品质部'},
-  ]},
-  {id:'aud',name:'审核部',en:'Audit Dept',count:19,type:'职能',bg:'#E1F5EE',tc:'#085041',bar:'#0F6E56',note:'成本+关务+生产计划',
-   people:[
-    {id:'p140',name:'陆佼艳',role:'预算总监',level:'M3',sub:'成本审核组'},
-    {id:'p141',name:'王燕芳',role:'计划经理',level:'M4',sub:'生产计划'},
-    {id:'p142',name:'项志超',role:'关务主管',level:'M5',sub:'关务审核组'},
-    {id:'p143',name:'刘曼',role:'计划主管',level:'M5',sub:'生产计划'},
-    {id:'p144',name:'赵宇玲',role:'计划主管',level:'M5',sub:'生产计划'},
-    {id:'p145',name:'周振环',role:'物料核价员',level:'M6',sub:'成本审核组'},
-    {id:'p146',name:'郭瑛丹',role:'审核员',level:'M7',sub:'成本审核组'},
-    {id:'p147',name:'吴娜',role:'计划员',level:'M7',sub:'生产计划'},
-    {id:'p148',name:'马晶晶',role:'预算员',level:'M8',sub:'成本审核组'},
-    {id:'p149',name:'王正平',role:'计划员',level:'M8',sub:'生产计划'},
-    {id:'p150',name:'徐凯迪',role:'关务员',level:'M8',sub:'关务审核组'},
-  ]},
-  {id:'leg',name:'法务部',en:'Legal Dept',count:57,type:'职能',bg:'#E1F5EE',tc:'#085041',bar:'#0F6E56',note:'法务+供应商管理+综合管理',
-   people:[
-    {id:'p160',name:'黄俊威',role:'法务经理',level:'M4',sub:'法务部'},
-    {id:'p161',name:'阙文娟',role:'综合管理部经理',level:'M5',sub:'综合管理部'},
-    {id:'p162',name:'黄洋',role:'物业经理',level:'M5',sub:'综合管理部'},
-    {id:'p163',name:'吉伟东',role:'供应链审核主管',level:'M6',sub:'供应商管理部'},
-    {id:'p164',name:'王鹏举',role:'供应商审计主管',level:'M6',sub:'供应商管理部'},
-    {id:'p165',name:'陈娜',role:'供应商管理主管',level:'M6',sub:'供应商管理部'},
-    {id:'p166',name:'周明',role:'工程主管',level:'M6',sub:'综合管理部'},
-    {id:'p167',name:'黄飞江',role:'安全主管',level:'M6',sub:'综合管理部'},
-    {id:'p168',name:'何春燕',role:'法务专员',level:'M7',sub:'法务部'},
-    {id:'p169',name:'陈建明',role:'供应链审核员',level:'M7',sub:'供应商管理部'},
-    {id:'p170',name:'龚倩',role:'验厂专员',level:'M7',sub:'供应商管理部'},
-    {id:'p171',name:'钟小云',role:'前台',level:'M8',sub:'综合管理部'},
-    {id:'p172',name:'徐利明',role:'司机',level:'M8',sub:'综合管理部'},
-    {id:'p173',name:'马鸿玉',role:'行政专员',level:'M8',sub:'综合管理部'},
-  ]},
-  {id:'hr',name:'人力资源',en:'Human Resources',count:16,type:'职能',bg:'#E1F5EE',tc:'#085041',bar:'#0F6E56',note:'',
-   people:[
-    {id:'p180',name:'朱家宬',role:'人力资源总监',level:'M4',sub:'人力资源部'},
-    {id:'p181',name:'张灵艳',role:'人力经理',level:'M4',sub:'人力资源部'},
-    {id:'p182',name:'梅月',role:'人事主管',level:'M5',sub:'人力资源部'},
-    {id:'p183',name:'吴迎萍',role:'HRBP',level:'M6',sub:'HRBP组'},
-    {id:'p184',name:'靳德帅',role:'招聘主管',level:'M6',sub:'招聘组'},
-    {id:'p185',name:'廖凤英',role:'薪酬主管',level:'M6',sub:'薪资组'},
-    {id:'p186',name:'邹沁雨',role:'人事专员',level:'M7',sub:'HRBP组'},
-    {id:'p187',name:'徐春艳',role:'人事专员',level:'M7',sub:'人力资源部'},
-    {id:'p188',name:'王婷',role:'招聘专员',level:'M7',sub:'招聘组'},
-    {id:'p189',name:'刘鑫磊',role:'AI管培生',level:'M8',sub:'人力资源部'},
-    {id:'p190',name:'吴宇楠',role:'储备干部',level:'M8',sub:'人力资源部'},
-  ]},
-  {id:'rd',name:'研发中心',en:'R&D Center',count:2,type:'研发',bg:'#FAEEDA',tc:'#633806',bar:'#854F0B',note:'',
-   people:[
-    {id:'p200',name:'（研发人员）',role:'共2人',level:'-',sub:'研发中心'},
-  ]},
-];
-
-let DATA=JSON.parse(localStorage.getItem('yunfu_v4')||'null')||DEFAULT_DATA;
-let activeId=null;
-let editPid=null;
-let editDid=null;
-let pidCounter=9000;
-const TOTAL=754;
+let sb = null;
+let DATA = [];
+let ARCHIVE = [];
+let activeId = null;
+let editPid = null, editDid = null;
+let pidCounter = 9000;
+let actionDid = null, actionPid = null;
+let isHR = false;
 
 const AC=['#EEEDFE','#E1F5EE','#FAEEDA','#FAECE7','#E6F1FB','#EAF3DE'];
 const ATC=['#3C3489','#085041','#633806','#712B13','#0C447C','#27500A'];
 function ac(i){return AC[Math.abs(i)%AC.length];}
 function atc(i){return ATC[Math.abs(i)%ATC.length];}
-function save(){localStorage.setItem('yunfu_v4',JSON.stringify(DATA));const t=document.getElementById('saved-tip');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+function today(){return new Date().toISOString().slice(0,10);}
+
+function showTip(msg, type){
+  const t=document.getElementById('saved-tip');
+  t.textContent=msg;
+  t.className='saved-tip show '+(type||'success');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+function showError(msg){
+  document.getElementById('error-msg').textContent=msg;
+  document.getElementById('loading-screen').classList.add('hide');
+  document.getElementById('error-screen').classList.add('show');
+}
+
+async function init(){
+  if (SUPABASE_URL.indexOf('Project URL') !== -1 || SUPABASE_KEY.indexOf('Publishable Key') !== -1) {
+    showError('请先在 HTML 文件顶部填入 Supabase 的 URL 和 Key，再上传到 GitHub。');
+    return;
+  }
+  try {
+    sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    await loadAll();
+    document.getElementById('loading-screen').classList.add('hide');
+    document.getElementById('main-page').style.display='block';
+    drawSVG();
+    renderArchive();
+    updateHRBadge();
+  } catch(e) {
+    console.error(e);
+    showError('连接失败：' + (e.message || e));
+  }
+}
+
+async function loadAll(){
+  const { data: depts, error: e1 } = await sb.from('departments').select('*').order('sort_order');
+  if (e1) throw e1;
+  const { data: emps, error: e2 } = await sb.from('employees').select('*');
+  if (e2) throw e2;
+  const { data: arch, error: e3 } = await sb.from('archived_employees').select('*').order('archived_at',{ascending:false});
+  if (e3) throw e3;
+
+  DATA = depts.map(d => ({
+    ...d,
+    people: emps.filter(p => p.dept_id === d.id).map(p => ({
+      id: p.id, name: p.name, role: p.role, level: p.level, sub: p.sub,
+      lastTransfer: p.last_transfer, lastLevelChange: p.last_level_change
+    }))
+  }));
+  ARCHIVE = arch.map(p => ({
+    id: p.id, name: p.name, role: p.role, level: p.level, sub: p.sub,
+    fromDeptId: p.from_dept_id, fromDeptName: p.from_dept_name,
+    leaveDate: p.leave_date, leaveReason: p.leave_reason, leaveNote: p.leave_note,
+    joinDate: p.join_date
+  }));
+}
+
+function updateHRBadge(){
+  const b = document.getElementById('hr-badge');
+  if (isHR){
+    b.textContent='✓ HR 已登录（点击注销）';
+    b.classList.remove('locked');
+    b.onclick = logout;
+    document.querySelectorAll('.hr-only').forEach(el => el.style.display='');
+    document.getElementById('hdr-sub').textContent='HR 模式 · 鼠标移到员工卡片可进行入转调离';
+  } else {
+    b.textContent='🔒 HR 登录';
+    b.classList.add('locked');
+    b.onclick = openLoginModal;
+    document.querySelectorAll('.hr-only').forEach(el => el.style.display='none');
+    document.getElementById('hdr-sub').textContent='点击部门节点 · 查看职级分布（编辑请 HR 登录）';
+  }
+  if (activeId) showDetail(activeId);
+}
+
+function openLoginModal(){
+  document.getElementById('login-password').value='';
+  document.getElementById('login-error').style.display='none';
+  document.getElementById('modal-login').style.display='flex';
+  setTimeout(()=>document.getElementById('login-password').focus(),100);
+}
+
+async function doLogin(){
+  const pwd = document.getElementById('login-password').value;
+  if (!pwd) return;
+  try {
+    const { data, error } = await sb.from('app_config').select('value').eq('key','hr_password').single();
+    if (error) throw error;
+    if (data.value === pwd){
+      isHR = true;
+      closeModal('modal-login');
+      updateHRBadge();
+      showTip('✓ HR 登录成功','success');
+    } else {
+      const err = document.getElementById('login-error');
+      err.textContent='口令错误，请重新输入';
+      err.style.display='block';
+    }
+  } catch(e){
+    document.getElementById('login-error').textContent='验证失败：'+(e.message||e);
+    document.getElementById('login-error').style.display='block';
+  }
+}
+
+function logout(){
+  if (!confirm('确定要注销 HR 登录吗？')) return;
+  isHR = false;
+  updateHRBadge();
+  showTip('已注销 HR 登录','success');
+}
+
+function openChangePassword(){
+  closeModal('modal-login');
+  document.getElementById('cpw-old').value='';
+  document.getElementById('cpw-new').value='';
+  document.getElementById('cpw-confirm').value='';
+  document.getElementById('cpw-error').style.display='none';
+  document.getElementById('modal-changepw').style.display='flex';
+}
+
+async function doChangePassword(){
+  const oldPw = document.getElementById('cpw-old').value;
+  const newPw = document.getElementById('cpw-new').value;
+  const confirmPw = document.getElementById('cpw-confirm').value;
+  const err = document.getElementById('cpw-error');
+  err.style.display='none';
+
+  if (!oldPw||!newPw||!confirmPw){err.textContent='请填写所有字段';err.style.display='block';return;}
+  if (newPw.length<4){err.textContent='新口令至少 4 位';err.style.display='block';return;}
+  if (newPw!==confirmPw){err.textContent='两次输入的新口令不一致';err.style.display='block';return;}
+
+  try {
+    const { data: cur } = await sb.from('app_config').select('value').eq('key','hr_password').single();
+    if (cur.value !== oldPw){err.textContent='当前口令错误';err.style.display='block';return;}
+    await sb.from('app_config').update({value: newPw, updated_at: new Date().toISOString()}).eq('key','hr_password');
+    await sb.from('app_config').update({value: new Date().toISOString(), updated_at: new Date().toISOString()}).eq('key','password_changed_at');
+    closeModal('modal-changepw');
+    showTip('✓ 口令已更新','success');
+  } catch(e){
+    err.textContent='更新失败：'+(e.message||e);
+    err.style.display='block';
+  }
+}
+
+function requireHR(){
+  if (!isHR){
+    alert('请先登录 HR 才能进行此操作。\n\n点击右上角的"🔒 HR 登录"按钮。');
+    return false;
+  }
+  return true;
+}
+
+async function logActivity(action, targetName, detail){
+  try {
+    await sb.from('activity_log').insert({action, target_name: targetName, detail});
+  } catch(e){ console.warn('日志写入失败:', e); }
+}
 
 function drawSVG(){
   const ns='http://www.w3.org/2000/svg';
@@ -350,11 +531,12 @@ function drawSVG(){
     p.setAttribute('d',d);p.setAttribute('fill','none');p.setAttribute('stroke','#d3d1c7');p.setAttribute('stroke-width','1');
     return p;
   }
+  const liveTotal=DATA.reduce((s,d)=>s+(d.count||0),0);
   const rx=470,ry=18,rw=120,rh=46;
   const rootG=document.createElementNS(ns,'g');
   rootG.appendChild(mkRect(rx,ry,rw,rh,'9','#EEEDFE','#534AB7','1'));
   rootG.appendChild(mkText(rx+rw/2,ry+17,'云蝠控股','13','600','#3C3489'));
-  rootG.appendChild(mkText(rx+rw/2,ry+33,TOTAL+'人','11','400','#534AB7'));
+  rootG.appendChild(mkText(rx+rw/2,ry+33,liveTotal+'人','11','400','#534AB7'));
   svg.appendChild(rootG);
   const NW=90,NH=46,NY1=158,NY2=228;
   const row1=DATA.slice(0,6);
@@ -402,7 +584,6 @@ function drawSVG(){
     svg.appendChild(g);
   });
 }
-
 function showDetail(id){
   activeId=id;
   const d=DATA.find(x=>x.id===id);
@@ -413,16 +594,18 @@ function showDetail(id){
     const r=g.querySelector('rect.node-rect');
     if(r)r.setAttribute('stroke-width',active?'2':'0.5');
   });
-  const rank=[...DATA].sort((a,b)=>b.count-a.count).findIndex(x=>x.id===id)+1;
+  const TOTAL=DATA.reduce((s,d)=>s+(d.count||0),0);
+  const rank=[...DATA].sort((a,b)=>(b.count||0)-(a.count||0)).findIndex(x=>x.id===id)+1;
   const mgrs=d.people.filter(p=>['M1','M2','M3','M4'].includes(p.level)).length;
   document.getElementById('d-title').textContent=d.name;
-  document.getElementById('d-sub').textContent=d.en+(d.note?' · '+d.note:'');
+  document.getElementById('d-sub').textContent=(d.en||'')+(d.note?' · '+d.note:'');
   document.getElementById('d-chips').innerHTML=`<span class="chip" style="background:${d.bg};color:${d.tc}">${d.type}</span><span class="chip" style="background:#f1efe8;color:#5F5E5A;margin-left:5px">规模 #${rank}</span>`;
   document.getElementById('d-kpis').innerHTML=`
     <div class="kpi"><div class="kpi-l">在编人数</div><div class="kpi-v">${d.count}</div></div>
-    <div class="kpi"><div class="kpi-l">占总人数</div><div class="kpi-v">${(d.count/TOTAL*100).toFixed(1)}%</div></div>
+    <div class="kpi"><div class="kpi-l">占总人数</div><div class="kpi-v">${TOTAL?(d.count/TOTAL*100).toFixed(1):0}%</div></div>
     <div class="kpi"><div class="kpi-l">管理层 M1-M4</div><div class="kpi-v">${mgrs}人</div></div>
     <div class="kpi"><div class="kpi-l">录入人员</div><div class="kpi-v">${d.people.length}</div></div>`;
+  document.querySelectorAll('.detail-panel .hr-only').forEach(el => el.style.display = isHR ? '' : 'none');
   renderPeople(d);
   const panel=document.getElementById('detail-panel');
   panel.classList.add('open');
@@ -450,13 +633,16 @@ function renderPeople(d){
             <div class="avatar" style="background:${ac(pi)};color:${atc(pi)}">${p.name[0]||'?'}</div>
             <div class="person-info">
               <div class="person-name">${p.name}</div>
-              <div class="person-role">${p.role}</div>
+              <div class="person-role">${p.role||''}</div>
               ${p.sub?`<div class="person-sub">${p.sub}</div>`:''}
             </div>
-            <div class="card-btns">
+            ${isHR?`<div class="card-btns">
+              <div class="icon-btn transfer" onclick="openTransfer('${d.id}','${p.id}')" title="调岗">📋</div>
+              <div class="icon-btn level" onclick="openLevel('${d.id}','${p.id}')" title="改职级">🎖</div>
+              <div class="icon-btn leave" onclick="openLeave('${d.id}','${p.id}')" title="办理离职">🚪</div>
               <div class="icon-btn" onclick="openEditPerson('${d.id}','${p.id}')" title="编辑">✎</div>
               <div class="icon-btn del" onclick="deletePerson('${d.id}','${p.id}')" title="删除">✕</div>
-            </div>
+            </div>`:''}
           </div>`).join('')}
       </div>
     </div>`;
@@ -465,6 +651,7 @@ function renderPeople(d){
 }
 
 function openAddPerson(){
+  if(!requireHR())return;
   if(!activeId)return;
   editPid=null;
   editDid=activeId;
@@ -477,39 +664,260 @@ function openAddPerson(){
 }
 
 function openEditPerson(did,pid){
+  if(!requireHR())return;
   const d=DATA.find(x=>x.id===did);
   const p=d&&d.people.find(x=>x.id===pid);
   if(!p)return;
   editDid=did;editPid=pid;
   document.getElementById('modal-title').textContent='编辑人员';
   document.getElementById('f-name').value=p.name;
-  document.getElementById('f-role').value=p.role;
+  document.getElementById('f-role').value=p.role||'';
   document.getElementById('f-level').value=p.level||'-';
   document.getElementById('f-sub').value=p.sub||'';
   document.getElementById('modal').style.display='flex';
 }
 
-function confirmPerson(){
+async function confirmPerson(){
   const name=document.getElementById('f-name').value.trim();
   if(!name){alert('请输入姓名');return;}
   const d=DATA.find(x=>x.id===editDid);
   if(!d)return;
-  if(editPid){
-    const p=d.people.find(x=>x.id===editPid);
-    if(p){p.name=name;p.role=document.getElementById('f-role').value.trim();p.level=document.getElementById('f-level').value;p.sub=document.getElementById('f-sub').value.trim();}
-  } else {
-    d.people.push({id:'p'+(pidCounter++),name,role:document.getElementById('f-role').value.trim(),level:document.getElementById('f-level').value,sub:document.getElementById('f-sub').value.trim()});
-  }
-  save();closeModal();showDetail(editDid);
+  const role=document.getElementById('f-role').value.trim();
+  const level=document.getElementById('f-level').value;
+  const sub=document.getElementById('f-sub').value.trim();
+  showTip('正在保存...','loading');
+  try{
+    if(editPid){
+      await sb.from('employees').update({name,role,level,sub,updated_at:new Date().toISOString()}).eq('id',editPid);
+      const p=d.people.find(x=>x.id===editPid);
+      Object.assign(p,{name,role,level,sub});
+      await logActivity('edit',name,{deptId:editDid,changes:{name,role,level,sub}});
+    } else {
+      const newId='p'+Date.now();
+      await sb.from('employees').insert({id:newId,dept_id:editDid,name,role,level,sub,join_date:today()});
+      await sb.from('departments').update({count:(d.count||0)+1}).eq('id',editDid);
+      d.people.push({id:newId,name,role,level,sub});
+      d.count=(d.count||0)+1;
+      await logActivity('add',name,{deptId:editDid,deptName:d.name,role,level});
+    }
+    closeModal('modal');showDetail(editDid);drawSVG();
+    showTip('✓ 已保存','success');
+  }catch(e){showTip('保存失败:'+(e.message||e),'error');console.error(e);}
 }
 
-function deletePerson(did,pid){
+async function deletePerson(did,pid){
+  if(!requireHR())return;
   const d=DATA.find(x=>x.id===did);
   if(!d)return;
   const p=d.people.find(x=>x.id===pid);
-  if(!p||!confirm(`确定删除「${p.name}」吗？`))return;
-  d.people=d.people.filter(x=>x.id!==pid);
-  save();showDetail(did);
+  if(!p||!confirm(`确定删除「${p.name}」吗？\n（永久删除，不会进归档区。如要保留记录请用"办理离职"。）`))return;
+  showTip('正在删除...','loading');
+  try{
+    await sb.from('employees').delete().eq('id',pid);
+    const newCount=Math.max(0,(d.count||0)-1);
+    await sb.from('departments').update({count:newCount}).eq('id',did);
+    d.people=d.people.filter(x=>x.id!==pid);
+    d.count=newCount;
+    await logActivity('delete',p.name,{deptId:did,reason:'永久删除'});
+    showDetail(did);drawSVG();
+    showTip('✓ 已删除','success');
+  }catch(e){showTip('删除失败:'+(e.message||e),'error');console.error(e);}
+}
+
+function openTransfer(did,pid){
+  if(!requireHR())return;
+  const d=DATA.find(x=>x.id===did);
+  const p=d&&d.people.find(x=>x.id===pid);
+  if(!p)return;
+  actionDid=did;actionPid=pid;
+  document.getElementById('t-info').innerHTML=`<strong>${p.name}</strong> · ${p.role||'-'} · ${p.level||'-'}<br>当前部门：${d.name}${p.sub?' / '+p.sub:''}`;
+  const sel=document.getElementById('t-dept');
+  sel.innerHTML='';
+  DATA.forEach(dd=>{
+    const opt=document.createElement('option');
+    opt.value=dd.id;
+    opt.textContent=dd.name+' ('+dd.type+')';
+    if(dd.id===did)opt.disabled=true;
+    sel.appendChild(opt);
+  });
+  for(let i=0;i<sel.options.length;i++){if(!sel.options[i].disabled){sel.selectedIndex=i;break;}}
+  document.getElementById('t-sub').value='';
+  document.getElementById('t-role').value='';
+  document.getElementById('t-note').value='';
+  document.getElementById('modal-transfer').style.display='flex';
+}
+
+async function confirmTransfer(){
+  const fromD=DATA.find(x=>x.id===actionDid);
+  const newDid=document.getElementById('t-dept').value;
+  const toD=DATA.find(x=>x.id===newDid);
+  if(!fromD||!toD||fromD.id===toD.id){alert('请选择不同的部门');return;}
+  const p=fromD.people.find(x=>x.id===actionPid);
+  if(!p)return;
+  const newSub=document.getElementById('t-sub').value.trim();
+  const newRole=document.getElementById('t-role').value.trim();
+  const note=document.getElementById('t-note').value.trim();
+  const transferRecord={from:fromD.name,to:toD.name,date:today(),note};
+  showTip('正在保存...','loading');
+  try{
+    const updates={dept_id:newDid,last_transfer:transferRecord,updated_at:new Date().toISOString()};
+    if(newSub)updates.sub=newSub;
+    if(newRole)updates.role=newRole;
+    await sb.from('employees').update(updates).eq('id',actionPid);
+    await sb.from('departments').update({count:Math.max(0,(fromD.count||0)-1)}).eq('id',fromD.id);
+    await sb.from('departments').update({count:(toD.count||0)+1}).eq('id',toD.id);
+    fromD.people=fromD.people.filter(x=>x.id!==actionPid);
+    fromD.count=Math.max(0,(fromD.count||0)-1);
+    if(newSub)p.sub=newSub;
+    if(newRole)p.role=newRole;
+    p.lastTransfer=transferRecord;
+    toD.people.push(p);
+    toD.count=(toD.count||0)+1;
+    await logActivity('transfer',p.name,transferRecord);
+    closeModal('modal-transfer');showDetail(toD.id);drawSVG();
+    showTip('✓ 调岗完成','success');
+  }catch(e){showTip('调岗失败:'+(e.message||e),'error');console.error(e);}
+}
+
+function openLevel(did,pid){
+  if(!requireHR())return;
+  const d=DATA.find(x=>x.id===did);
+  const p=d&&d.people.find(x=>x.id===pid);
+  if(!p)return;
+  actionDid=did;actionPid=pid;
+  document.getElementById('l-info').innerHTML=`<strong>${p.name}</strong> · ${p.role||'-'} · 当前职级：<strong>${p.level||'-'}</strong>`;
+  document.getElementById('l-level').value=p.level||'-';
+  document.getElementById('l-note').value='';
+  document.getElementById('modal-level').style.display='flex';
+}
+
+async function confirmLevel(){
+  const d=DATA.find(x=>x.id===actionDid);
+  const p=d&&d.people.find(x=>x.id===actionPid);
+  if(!p)return;
+  const newLevel=document.getElementById('l-level').value;
+  const note=document.getElementById('l-note').value.trim();
+  const change={from:p.level,to:newLevel,date:today(),note};
+  showTip('正在保存...','loading');
+  try{
+    await sb.from('employees').update({level:newLevel,last_level_change:change,updated_at:new Date().toISOString()}).eq('id',actionPid);
+    p.lastLevelChange=change;
+    p.level=newLevel;
+    await logActivity('level',p.name,change);
+    closeModal('modal-level');showDetail(actionDid);
+    showTip('✓ 职级已更新','success');
+  }catch(e){showTip('保存失败:'+(e.message||e),'error');console.error(e);}
+}
+
+function openLeave(did,pid){
+  if(!requireHR())return;
+  const d=DATA.find(x=>x.id===did);
+  const p=d&&d.people.find(x=>x.id===pid);
+  if(!p)return;
+  actionDid=did;actionPid=pid;
+  document.getElementById('q-info').innerHTML=`<strong>${p.name}</strong> · ${p.role||'-'} · ${p.level||'-'}<br>所属：${d.name}${p.sub?' / '+p.sub:''}`;
+  document.getElementById('q-date').value=today();
+  document.getElementById('q-reason').value='主动离职';
+  document.getElementById('q-note').value='';
+  document.getElementById('modal-leave').style.display='flex';
+}
+
+async function confirmLeave(){
+  const d=DATA.find(x=>x.id===actionDid);
+  const p=d&&d.people.find(x=>x.id===actionPid);
+  if(!p)return;
+  const leaveDate=document.getElementById('q-date').value;
+  const leaveReason=document.getElementById('q-reason').value;
+  const leaveNote=document.getElementById('q-note').value.trim();
+  showTip('正在保存...','loading');
+  try{
+    await sb.from('archived_employees').insert({
+      id:p.id,name:p.name,role:p.role,level:p.level,sub:p.sub,
+      from_dept_id:d.id,from_dept_name:d.name,
+      leave_date:leaveDate,leave_reason:leaveReason,leave_note:leaveNote
+    });
+    await sb.from('employees').delete().eq('id',p.id);
+    await sb.from('departments').update({count:Math.max(0,(d.count||0)-1)}).eq('id',d.id);
+    ARCHIVE.unshift({
+      id:p.id,name:p.name,role:p.role,level:p.level,sub:p.sub,
+      fromDeptId:d.id,fromDeptName:d.name,
+      leaveDate,leaveReason,leaveNote
+    });
+    d.people=d.people.filter(x=>x.id!==p.id);
+    d.count=Math.max(0,(d.count||0)-1);
+    await logActivity('leave',p.name,{deptName:d.name,leaveDate,leaveReason,leaveNote});
+    closeModal('modal-leave');showDetail(d.id);drawSVG();renderArchive();
+    showTip('✓ 离职办理完成','success');
+  }catch(e){showTip('办理失败:'+(e.message||e),'error');console.error(e);}
+}
+
+function renderArchive(){
+  const body=document.getElementById('archive-body');
+  document.getElementById('archive-count').textContent=ARCHIVE.length;
+  if(ARCHIVE.length===0){
+    body.innerHTML='<div style="color:#888780;font-size:12px;padding:8px 0">暂无离职记录</div>';
+    return;
+  }
+  body.innerHTML=ARCHIVE.map((p,idx)=>`
+    <div class="archive-item">
+      <div class="archive-info">
+        <strong>${p.name}</strong> · ${p.role||'-'} · ${p.level||'-'}
+        <div class="archive-meta">
+          原部门：${p.fromDeptName}${p.sub?' / '+p.sub:''} ·
+          离职日期：${p.leaveDate} ·
+          原因：${p.leaveReason}
+          ${p.leaveNote?'<br>备注：'+p.leaveNote:''}
+        </div>
+      </div>
+      ${isHR?`<div style="display:flex;gap:6px">
+        <button class="btn sm" onclick="restoreArchive(${idx})">↩ 恢复</button>
+        <button class="btn sm danger" onclick="deleteArchive(${idx})">永久删除</button>
+      </div>`:''}
+    </div>
+  `).join('');
+}
+
+async function restoreArchive(idx){
+  if(!requireHR())return;
+  const p=ARCHIVE[idx];
+  if(!p)return;
+  if(!confirm(`确定恢复「${p.name}」到原部门「${p.fromDeptName}」？\n该部门人数将 +1`))return;
+  const d=DATA.find(x=>x.id===p.fromDeptId);
+  if(!d){alert('原部门已不存在，无法恢复');return;}
+  showTip('正在恢复...','loading');
+  try{
+    await sb.from('employees').insert({id:p.id,dept_id:d.id,name:p.name,role:p.role,level:p.level,sub:p.sub});
+    await sb.from('archived_employees').delete().eq('id',p.id);
+    await sb.from('departments').update({count:(d.count||0)+1}).eq('id',d.id);
+    d.people.push({id:p.id,name:p.name,role:p.role,level:p.level,sub:p.sub});
+    d.count=(d.count||0)+1;
+    ARCHIVE.splice(idx,1);
+    await logActivity('restore',p.name,{deptName:d.name});
+    drawSVG();renderArchive();
+    if(activeId===d.id)showDetail(d.id);
+    showTip('✓ 已恢复到「'+d.name+'」','success');
+  }catch(e){showTip('恢复失败:'+(e.message||e),'error');console.error(e);}
+}
+
+async function deleteArchive(idx){
+  if(!requireHR())return;
+  const p=ARCHIVE[idx];
+  if(!p)return;
+  if(!confirm(`永久删除「${p.name}」的离职记录？\n此操作不可恢复。`))return;
+  showTip('正在删除...','loading');
+  try{
+    await sb.from('archived_employees').delete().eq('id',p.id);
+    ARCHIVE.splice(idx,1);
+    renderArchive();
+    showTip('✓ 已永久删除','success');
+  }catch(e){showTip('删除失败:'+(e.message||e),'error');console.error(e);}
+}
+
+function toggleArchive(){
+  const body=document.getElementById('archive-body');
+  const tog=document.getElementById('archive-toggle');
+  body.classList.toggle('show');
+  tog.textContent=body.classList.contains('show')?'收起 ▲':'展开 ▼';
 }
 
 function closeDetail(){
@@ -518,10 +926,15 @@ function closeDetail(){
   activeId=null;
 }
 
-function closeModal(){document.getElementById('modal').style.display='none';}
-document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+function closeModal(id){document.getElementById(id||'modal').style.display='none';}
 
-drawSVG();
+['modal','modal-transfer','modal-level','modal-leave','modal-login','modal-changepw'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeModal(id);});
+});
+
+document.getElementById('login-password').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+
+init();
 </script>
 </body>
 </html>
